@@ -4,12 +4,24 @@
 > routes, sender-ID spoofing, smishing and signalling attacks — covering the research, the
 > industry guidance, the datasets and the tooling that actually exist.
 
-Industry estimates cited by the Mobile Ecosystem Forum and by messaging providers put
-artificially inflated traffic at **5–40% of international A2P SMS traffic in some regions**, with
-business losses around **US$1.6 billion in 2023**. Treat both as industry estimates: they are
-widely repeated, but the primary research behind them is not public. Despite the scale claimed,
-almost everything written about the problem is a vendor blog post or a membership-gated industry
-document.
+Artificially inflated traffic is expensive enough that everyone quotes a number for it, and
+**the numbers do not agree with each other**:
+
+| Claim | For 2023 | Source |
+|---|---|---|
+| Share of international A2P traffic | 5–40%, region dependent | Mobile Ecosystem Forum, repeated by messaging providers |
+| Share of international A2P traffic | 18% | [Juniper Research / VOX Solutions whitepaper](https://www.prnewswire.com/news-releases/juniper-research-exposes-the-billion-dollar-drain-of-artificial-inflated-traffic-ait-and-sms-trashing-302098362.html), March 2024 |
+| Cost to enterprises | US$1.6bn | Mobile Ecosystem Forum, Infobip |
+| Cost to enterprises | US$2.1bn | circulated in trade press |
+| Cost to enterprises | US$8.5bn | Juniper Research |
+
+Same year, same phenomenon, a five-fold spread on cost. **Treat every figure here as an industry
+estimate with undisclosed methodology**, and cite the spread rather than picking the number that
+suits the argument. The disagreement is itself evidence of the gap this list is about: nobody can
+measure the problem in the open, because the data to measure it with is not public.
+
+Despite the scale claimed, almost everything written about it is a vendor blog post or a
+membership-gated industry document.
 
 This index exists because there was no single place to start. It deliberately separates the two
 vantage points that get conflated — **the message** (is this text a scam?) and **the traffic**
@@ -24,6 +36,7 @@ is the point of this list; if you are looking for something to build, start ther
 - [Start here](#start-here)
 - [Threat classes](#threat-classes)
 - [Industry guidance and standards](#industry-guidance-and-standards)
+- [The structural fix: replacing SMS OTP](#the-structural-fix-replacing-sms-otp)
 - [Research](#research)
   - [Traffic-side: AIT, pumping and flow analysis](#traffic-side-ait-pumping-and-flow-analysis)
   - [Message-side: smishing and content classification](#message-side-smishing-and-content-classification)
@@ -60,6 +73,7 @@ different economics and — the part that matters most here — **different dete
 | **AIT** | Application / business | Traffic inflated artificially to earn revenue share. The umbrella category, not a single technique | The party billed for the traffic |
 | ↳ **SMS pumping** | Application / business | The dominant AIT pattern: bots drive OTP or verification sends to attacker-controlled ranges, and the attacker takes a cut of the termination fee | The enterprise sending the OTPs |
 | **Grey routes** | Routing / supply chain | Unauthorised or undeclared routing — A2P presented as P2P, local termination, interconnect bypass. Broader than the "A2P disguised as P2P" shorthand | The terminating operator |
+| **Fake DLR / SMS trashing** | Routing / supply chain | A rogue party in the chain returns a successful delivery receipt without terminating the message, billing for delivery it never performed. The inverse of AIT: AIT bills for traffic that was sent, fake DLR bills for traffic that was not | The sender, who pays for messages nobody received |
 | **Sender-ID spoofing** | Routing / content | Forged alphanumeric sender identity, usually to enable phishing | The impersonated brand, and the recipient |
 | **Smishing** | Content / user | Phishing delivered by SMS | The recipient |
 | **Signalling attacks** | Network / signalling | SS7 or Diameter abuse for interception, location tracking or message manipulation | The subscriber |
@@ -76,6 +90,12 @@ Further reading on the economics and the industry response:
 - [SMS vs artificially inflated traffic: fighting fraud and restoring trust](https://www.thefastmode.com/expert-opinion/43869-sms-vs-artificially-inflated-traffic-the-steps-for-fighting-fraud-and-restoring-trust)
 - [Artificial inflation of traffic threatens messaging](https://sinch.com/blog/artificial-inflation-traffic-ait-growing-threat-messaging-ecosystem/) — Sinch
 - [Artificial inflation of traffic](https://docs.smsportal.com/docs/artificial-inflation-of-traffic) — SMSPortal, written as operational documentation rather than marketing
+
+On fake DLR specifically, which is under-covered relative to how much money it moves:
+
+- [SMS fake delivery receipts: causes and solutions](https://telqtele.com/blog/sms-fake-delivery-receipts-fake-dlr) — the most detailed public treatment
+- [How fake DLRs devalue a well-functioning SMS market](https://www.cm.com/blog/how-fake-dlr-devaluate-a-well-functioning-sms-market/) — CM.com, on the market-level effect rather than the individual loss
+- [How to resist fake DLR](https://www.smsmode.com/en/comment-resister-aux-fake-dlr/) — practical, from the sender's side
 
 ## Industry guidance and standards
 
@@ -97,6 +117,27 @@ protocols, FS.11 covers monitoring and firewall rules.
 - [Mobile Ecosystem Forum](https://mobileecosystemforum.com/) — runs a working group on
   messaging fraud and publishes some material publicly.
 - **i3Forum** — carrier-side fraud working group, active on AIT.
+
+## The structural fix: replacing SMS OTP
+
+Worth knowing before investing in detection, because it changes the shape of the problem rather
+than defending against it.
+
+AIT is profitable because SMS OTP exists and someone pays per message. Network APIs remove that
+premise: the app asks the operator whether the handset in the current session actually holds the
+claimed number, and no message is sent at all. No message, no termination fee, no revenue to
+inflate.
+
+- [CAMARA Number Verification](https://camaraproject.org/number-verification/) — the API itself.
+  CAMARA is a Linux Foundation project run with GSMA, standardising network APIs across operators.
+- [GSMA Open Gateway API descriptions](https://www.gsma.com/solutions-and-impact/gsma-open-gateway/gsma-open-gateway-api-descriptions/)
+  — the wider programme this sits in.
+- [AIT: the root cause, the solution, and the implication on RCS and network APIs](https://www.ericsson.com/en/reports-and-papers/white-papers/ait-the-root-cause-the-solution-and-the-implication-on-rcs-and-network-apis)
+  — Ericsson, on what happens to AIT as traffic moves to RCS and APIs.
+
+This does not make detection work obsolete. Adoption is partial and uneven, SMS OTP will be in
+service for years, and traffic that already flowed still has to be adjudicated and billed. But
+anyone building in this area should know the ground is moving.
 
 ## Research
 
