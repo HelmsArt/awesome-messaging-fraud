@@ -28,6 +28,13 @@ vantage points that get conflated — **the message** (is this text a scam?) and
 (is this flow fraudulent?) — because the research is overwhelmingly about the first, and the
 money is overwhelmingly lost to the second.
 
+**What this is, and what it is not.** It is a reading list, compiled entirely from publicly
+accessible sources by someone who is not an operator and has no carrier-side field experience.
+Every annotation is an inference from what those sources say, not an account of how the
+interconnect behaves in practice. Where a claim here is wrong, it is wrong in a way a
+practitioner would spot immediately — so corrections are the most valuable contribution this
+list can receive.
+
 **A [gaps section](#gaps--what-does-not-exist) at the end lists what is missing.** That section
 is the point of this list; if you are looking for something to build, start there.
 
@@ -268,8 +275,11 @@ the most welcome kind of contribution.
    English-centric, though work has begun on Portuguese and other lower-resource languages.
    On the traffic side the question does not yet arise.
 
-I am working on items 2–4 at [opena2p](https://github.com/HelmsArt) — disclosed here rather
-than quietly seeded through the list.
+**These are open, and this list does not claim them.** An earlier version of this section said
+I was building items 2–4. I am not: I compiled this index by reading publicly accessible
+sources, and I have no operator-side experience to build a traffic generator or a detector
+against. Saying so is more useful to you than a placeholder — if you are looking for something
+to build, nothing here is taken. Build one and send a PR; it goes in the list.
 
 ## Contributing
 
