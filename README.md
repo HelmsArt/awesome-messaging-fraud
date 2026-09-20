@@ -281,6 +281,8 @@ sources, and I have no operator-side experience to build a traffic generator or 
 against. Saying so is more useful to you than a placeholder — if you are looking for something
 to build, nothing here is taken. Build one and send a PR; it goes in the list.
 
+**Last reviewed:** 2026-09-20.
+
 ## Contributing
 
 Additions welcome, particularly traffic-side research, non-English resources, and anything that
